@@ -97,6 +97,12 @@ func (s *Server) UserLeft(ctx context.Context, user *proto.User) (*proto.Close, 
 	for _, conn := range s.Connection {
 		if conn.id == user.Id {
 			conn.active = false		
+			s.LamportTime++
+			s.BroadcastMessage(&proto.Message{
+				Id:          user.Id,
+				Content:     "Participant " + user.Id + " left Chitty-Chat at Lamport time " + strconv.FormatInt(user.LamportTime, 10),
+				LamportTime: int64(user.LamportTime),
+			}, conn.stream)
 		}
 	}
 	return &proto.Close{}, nil

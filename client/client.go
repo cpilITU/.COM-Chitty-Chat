@@ -6,12 +6,11 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
+	"fmt"
 	proto "github.com/cpilITU/Chitty-Chat/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -33,7 +32,6 @@ func main() {
 	user := createUser()
 
 	stream := createSomething(client, user)
-	fmt.Println(user.LamportTime)
 
 	go func(str proto.ChittyChat_CreateConnectionClient) {
 		for {
@@ -82,11 +80,7 @@ func writeMessage(client proto.ChittyChatClient, user *proto.User) {
 			if tempHolderForUserMSG == "quit" {
 				client.UserLeft(context.Background(), user)
 				user.LamportTime++
-				client.BroadcastMessage(context.Background(), &proto.Message{
-					Id:          user.Id,
-					Content:     "Participant " + user.Id + " left Chitty-Chat at Lamport time " + strconv.FormatInt(user.LamportTime, 10),
-					LamportTime: int64(user.LamportTime),
-				})
+				
 				break
 			} else {
 				_, err := client.BroadcastMessage(context.Background(), &proto.Message{
