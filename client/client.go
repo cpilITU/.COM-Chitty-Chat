@@ -38,7 +38,7 @@ func main() {
 			msg, _ := str.Recv()
 			//Update Lamport time when message is recived
 			max(msg.LamportTime, user)
-			fmt.Printf("%v : %s {Current Lamport time %d}\n", msg.Id, msg.Content, user.LamportTime)
+			fmt.Printf("%v : %s {Recived at Lamport time %d}\n", msg.Id, msg.Content, user.LamportTime)
 		}
 	}(stream)
 
