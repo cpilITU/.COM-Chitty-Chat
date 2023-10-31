@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ChittyChat;
+
+option go_package = "grpc/proto";
+
+message User {
+    string id = 1;
+    int64 lamportTime = 2;
+}
+
+message Message {
+    string id = 1;
+    string content = 2;
+    int64 lamportTime = 3;
+}
+
+message Close {}
+
+service ChittyChat {
+    rpc CreateConnection(User) returns (stream Message);
+    rpc BroadcastMessage(Message) returns (stream Message);
+    rpc UserLeft(User) returns (Close);
+}
